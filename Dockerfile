@@ -12,14 +12,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 ENV PORT=10000
 
-RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+RUN sed -ri 's!/var/www/html!/var/www/html/public!g' \
     /etc/apache2/sites-available/*.conf \
     && sed -ri 's/AllowOverride None/AllowOverride All/g' \
-    /etc/apache2/apache2.conf \
-    && sed -ri 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
+    /etc/apache2/apache2.conf
 
 WORKDIR /var/www/html
 
